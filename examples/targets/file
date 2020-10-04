@@ -1,0 +1,4 @@
+Type=file
+Source=/etc
+DestUrl=ftp://localhost/Backups/$HOST/$1
+Auth=vagrant
