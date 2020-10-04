@@ -1,0 +1,5 @@
+Type=snapshot
+Source=/mnt/data/subvol
+SnapshotBase=/mnt/data/snapshots/$1
+DestUrl=ftp://localhost/Backups/$HOST/$1
+Auth=vagrant
