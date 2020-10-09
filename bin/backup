@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+LIB_DIR=/usr/lib/backup-util
+TARGET_DIR=/etc/backup-util/targets
+AUTH_DIR=/etc/backup-util/auth
+
+set -e
+
+for file in "$LIB_DIR"/*; do [[ -f "$file" ]] && source "$file"; done
+unset "file"
+
+print_help() {
+  local command=$(basename `readlink -f -- "$0"`)
+  cat <<-EOS
+${T_BOLD}${command} - Make backups based on btrfs snapshots${T_NORMAL}
+
+${T_BOLD}Reference:${T_NORMAL}
+    ${command} <${T_GREEN}BACKUP${T_NORMAL}>
+
+${T_BOLD}Options:${T_NORMAL}
+    ${T_GREEN}BACKUP${T_NORMAL}         Name of backup target
+EOS
+}
+
+backup_target="$1"
+if [[ -z "$backup_target" ]]; then
+  print_error "Backup target not set"
+  print_help
+  exit 1
+fi
+
+target_path="$TARGET_DIR/$backup_target"
+if [[ ! -f "$target_path" ]]; then
+  print_error "Backup target '$target_path' not found"
+  exit 1
+fi
+
+. "$target_path" "$backup_target"
+
+if ! check_variables_set "Type"; then
+  print_error "No type was specified in target '$backup_target'"
+  exit 2
+fi
+
+if [[ -n "$Auth" ]]; then
+  auth_file_path="$AUTH_DIR/$Auth"
+  if [[ ! -f "$auth_file_path" ]]; then
+    print_error "Auth file '$auth_file_path' does not exist"
+    exit 2
+  fi
+  if [[ "$(stat -c %A "$auth_file_path")" != "-rwxrw----" ]]; then
+    print_warning "Auth file '$auth_file_path' has permissions other than -rwxrw----"
+    print_warning "This may be a security issue"
+  fi
+
+  . "$auth_file_path"
+
+  if ! check_variables_set 'User' 'Password'; then
+    print_error "Options 'User' and 'Password' must be set in auth file '$auth_file_path'"
+    exit 2
+  fi
+fi
+
+backup_executable_path="$LIB_DIR/type/$Type.sh"
+if [[ ! -f "$backup_executable_path" ]]; then
+  print_error "Unknown backup type '$Type'"
+  exit 2
+fi
+
+. "$backup_executable_path" "$backup_target"
