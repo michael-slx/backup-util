@@ -12,6 +12,9 @@ fi
 dest_fn="$1-$(date +"%Y%m%d-%H%M%S").tar.xz"
 dest_url="$DestUrl/$dest_fn"
 
+# Finished config, doing backup now
+sd_notify_ready
+
 tar -c --sparse --acls --selinux --xattrs -f - "$Source" | \
 pv -pterb -s $(du -sb "$Source" | awk '{print $1}') | \
 xz | \
