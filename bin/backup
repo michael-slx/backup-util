@@ -15,12 +15,19 @@ print_help() {
 ${T_BOLD}${command} - Make backups based on btrfs snapshots${T_NORMAL}
 
 ${T_BOLD}Reference:${T_NORMAL}
-    ${command} <${T_GREEN}BACKUP${T_NORMAL}>
+    ${command} [--systemd] <${T_GREEN}BACKUP${T_NORMAL}>
 
 ${T_BOLD}Options:${T_NORMAL}
-    ${T_GREEN}BACKUP${T_NORMAL}         Name of backup target
+    --systemd         Enable communication with systemd
+    ${T_GREEN}BACKUP${T_NORMAL}            Name of backup target
 EOS
 }
+
+ARG_USE_SYSTEMD=0
+if [[ "$1" == *"--systemd"* ]]; then
+  ARG_USE_SYSTEMD=1
+  shift
+fi
 
 backup_target="$1"
 if [[ -z "$backup_target" ]]; then
