@@ -24,8 +24,9 @@ EOS
 }
 
 ARG_USE_SYSTEMD=0
-if [[ "$1" != "--systemd" ]]; then
+if [[ "$1" == *"--systemd"* ]]; then
   ARG_USE_SYSTEMD=1
+  shift
 fi
 
 backup_target="$1"
