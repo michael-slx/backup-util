@@ -26,6 +26,7 @@ EOS
 ARG_USE_SYSTEMD=0
 if [[ "$1" == *"--systemd"* ]]; then
   ARG_USE_SYSTEMD=1
+  print_info "systemd enabled"
   shift
 fi
 
@@ -42,6 +43,7 @@ if [[ ! -f "$target_path" ]]; then
   exit 1
 fi
 
+print_info "Loading target file '$target_path'"
 . "$target_path" "$backup_target"
 
 if ! check_variables_set "Type"; then
@@ -60,6 +62,7 @@ if [[ -n "$Auth" ]]; then
     print_warning "This may be a security issue"
   fi
 
+  print_info "Loading auth file '$auth_file_path'"
   . "$auth_file_path"
 
   if ! check_variables_set 'User' 'Password'; then
@@ -74,4 +77,5 @@ if [[ ! -f "$backup_executable_path" ]]; then
   exit 2
 fi
 
+print_info "Loading backup type file '$backup_executable_path'"
 . "$backup_executable_path" "$backup_target"
