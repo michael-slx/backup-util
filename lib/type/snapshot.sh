@@ -30,11 +30,26 @@ fi
 # Finished config, doing backup now
 sd_notify_ready
 
-create_btrfs_snapshot "$Source" "$snapshot_dest"
+(
+  create_btrfs_snapshot "$Source" "$snapshot_dest"
 
-tar -c --sparse --acls --selinux --xattrs -f - "$snapshot_dest" | \
-pv -pterb -s $(du -sb "$snapshot_dest" | awk '{print $1}') | \
-xz | \
-curl $auth_param -T - --ftp-create-dirs -s "$dest_url"
+  tar -c --sparse --acls --selinux --xattrs -f - "$snapshot_dest" | \
+  pv -pterb -s $(du -sb "$snapshot_dest" | awk '{print $1}') | \
+  xz | \
+  curl $auth_param -T - --ftp-create-dirs -s "$dest_url"
 
-delete_btrfs_snapshot "$snapshot_dest"
+  delete_btrfs_snapshot "$snapshot_dest"
+) &
+bg_pid=$!
+
+trap "kill $bg_pid 2> /dev/null" EXIT SIGHUP SIGINT SIGQUIT SIGTERM
+
+# Satisfy watchdog
+while kill -0 $bg_pid 2> /dev/null; do
+  sd_notify_watchdog
+  sleep 1
+done
+
+# Disarm trap & retrieve job's exit code
+trap - EXIT
+wait $bg_pid
