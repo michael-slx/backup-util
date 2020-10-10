@@ -27,6 +27,9 @@ if [[ -n "$User" ]] && [[ -n "$Password" ]]; then
   auth_param="-u ${User}:${Password}"
 fi
 
+# Finished config, doing backup now
+sd_notify_ready
+
 create_btrfs_snapshot "$Source" "$snapshot_dest"
 
 tar -c --sparse --acls --selinux --xattrs -f - "$snapshot_dest" | \
