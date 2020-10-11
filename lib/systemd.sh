@@ -13,3 +13,7 @@ sd_notify_ready() {
 sd_notify_watchdog() {
   sd_notify "WATCHDOG=1"
 }
+
+sd_notify_stopping() {
+  sd_notify "STOPPING=1"
+}
