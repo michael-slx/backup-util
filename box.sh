@@ -32,14 +32,10 @@ sudo cp -v "$dummy_file" "/mnt/data/root/subvol/file1"
 sudo cp -v "$dummy_file" "/mnt/data/root/subvol/file2"
 rm -v "$dummy_file"
 
-sudo ln -sfv /media/sf_vagrant/lib /usr/lib/backup-util
-sudo mkdir /etc/backup-util
-sudo ln -sfv /media/sf_vagrant/examples/auth /etc/backup-util/auth
-sudo ln -sfv /media/sf_vagrant/examples/targets /etc/backup-util/targets
-
-echo "export PATH=\$PATH:/media/sf_vagrant/bin" | sudo tee -a "$HOME/.zshenv"
-echo "export PATH=\$PATH:/media/sf_vagrant/bin" | sudo tee -a "$HOME/.bash_profile"
-
 sudo sed -i 's/#local_enable=YES/local_enable=YES/' /etc/vsftpd.conf
 sudo sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
 sudo systemctl enable --now vsftpd.service
+
+sudo /media/sf_vagrant/setup.sh -s -v
+sudo mkdir /etc/backup-util
+sudo ln -sfv /usr/share/backup-util/examples/* /etc/backup-util
