@@ -1,0 +1,11 @@
+[Unit]
+Description=weekly backup of %i
+
+[Timer]
+OnCalendar=weekly
+RandomizedDelaySec=3h
+Persistent=True
+Unit=backup@%i.service
+
+[Install]
+WantedBy=timers.target

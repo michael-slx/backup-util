@@ -1,0 +1,13 @@
+[Unit]
+Description=backup of %i
+StartLimitBurst=3
+StartLimitIntervalSec=15m
+
+[Service]
+Type=notify
+NotifyAccess=all
+ExecStart=/usr/bin/backup --systemd %i
+TimeoutStartSec=5s
+TimeoutStopSec=5s
+WatchdogSec=10s
+Restart=on-failure
