@@ -50,6 +50,9 @@ while kill -0 $bg_pid 2> /dev/null; do
   sleep 1
 done
 
+# Done with backup, tell systemd
+sd_notify_stopping
+
 # Disarm trap & retrieve job's exit code
 trap - EXIT
 wait $bg_pid
