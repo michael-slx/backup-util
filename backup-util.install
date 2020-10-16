@@ -1,0 +1,8 @@
+post_install() {
+  mkdir -p /etc/backup-util/targets
+  mkdir -p /etc/backup-util/auth
+
+  chown -R root:root /etc/backup-util
+  chmod -R 755 /etc/backup-util
+  chmod 750 /etc/backup-util/auth
+}
