@@ -37,5 +37,4 @@ sudo sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
 sudo systemctl enable --now vsftpd.service
 
 sudo /media/sf_vagrant/setup.sh -s -v
-sudo mkdir /etc/backup-util
-sudo ln -sfv /usr/share/backup-util/examples/* /etc/backup-util
+sudo ln -sf /usr/share/backup-util/examples /etc/backup-util
