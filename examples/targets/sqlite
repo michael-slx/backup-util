@@ -1,0 +1,4 @@
+Type=sqlite
+Source=/mnt/data/subvol/example.sdb
+DestUrl=ftp://localhost/Backups/$HOST/$1
+Auth=vagrant
