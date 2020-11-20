@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", keep_color: true, inline: <<-SHELL
     pacman -Syyuu --noconfirm
-    pacman -S --noconfirm btrfs-progs vsftpd pv
+    pacman -S --noconfirm btrfs-progs vsftpd pv sqlite3
     usermod -a -G vboxsf vagrant
   SHELL
   config.vm.provision "shell", reboot: true

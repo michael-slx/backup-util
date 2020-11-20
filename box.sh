@@ -26,11 +26,18 @@ EOS
 
 sudo mount -av
 
-dummy_file="/tmp/$USERNAME/backup_dummy"
+mkdir -p "/tmp/$(whoami)"
+
+dummy_file="/tmp/$(whoami)/backup_dummy"
 head -c 512M </dev/urandom >"$dummy_file"
 sudo cp -v "$dummy_file" "/mnt/data/root/subvol/file1"
 sudo cp -v "$dummy_file" "/mnt/data/root/subvol/file2"
 rm -v "$dummy_file"
+
+dummy_db="/tmp/$(whoami)/example.sdb"
+curl "https://raw.githubusercontent.com/lerocha/chinook-database/master/ChinookDatabase/DataSources/Chinook_Sqlite_AutoIncrementPKs.sqlite" > $dummy_db
+sudo cp -v $dummy_db "/mnt/data/root/subvol/example.sdb"
+sudo rm -v $dummy_db
 
 sudo sed -i 's/#local_enable=YES/local_enable=YES/' /etc/vsftpd.conf
 sudo sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
